@@ -1,5 +1,10 @@
 {
     "require": {
-        "twig/twig": "^3.22"
+        "eftec/bladeone": "^4.19"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
     }
 }

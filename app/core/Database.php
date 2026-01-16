@@ -1,5 +1,4 @@
 <?php
-
 namespace app\Core;
 
 use PDO;
@@ -7,37 +6,34 @@ use PDOException;
 
 class Database
 {
-    private static ?PDO $connection = null;
+    private static ?PDO $instance = null;
 
     private function __construct() {}
     private function __clone() {}
+    public function __wakeup() {
+        throw new Exception("Cannot unserialize singleton");
+    }
 
-    public static function getConnection(): PDO
+    public static function getInstance(): PDO
     {
-        if (self::$connection === null) {
-
+        if (self::$instance === null) {
             $config = require '../config/database.php';
+        
+            $host = $config['host'];
+            $port = $config['port'] ;
+            $dbname = $config['dbname'];
+            $user = $config['user'];
+            $password = $config['pass'];
 
-            $dsn = sprintf(
-                "%s:host=%s;dbname=%s;charset=%s",
-                $config['driver'],
-                $config['host'],
-                $config['dbname'],
-                $config['charset']
-            );
+            $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
 
             try {
-                self::$connection = new PDO(
-                    $dsn,
-                    $config['user'],
-                    $config['pass'],
-                    $config['options']
-                );
+                self::$instance = new PDO($dsn, $user, $password,$config['options']);
             } catch (PDOException $e) {
-                die("Erreur de connexion à la base de données : " . $e->getMessage());
+                die(" Erreur de connexion : " . $e->getMessage());
             }
         }
 
-        return self::$connection;
+        return self::$instance;
     }
 }

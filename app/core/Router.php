@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Core;
+namespace app\core;
 
 class Router
 {
@@ -22,7 +22,7 @@ class Router
         if(isset($this->routes[$requestMethod][$uri])) {
             [$controllerName, $methodName] = explode('@', $this->routes[$requestMethod][$uri]);
 
-            $controllerClass = "app\\Controllers\\$controllerName";
+            $controllerClass = "app\\Http\\controllers\\$controllerName";
             $controller = new $controllerClass();
             $controller->$methodName();
             return;
